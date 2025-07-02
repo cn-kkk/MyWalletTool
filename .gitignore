@@ -37,6 +37,3 @@ Desktop.ini
 # 本地配置
 .env
 .env.*
-
-# 其他
-wallets.txt 
