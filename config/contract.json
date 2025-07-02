@@ -1,0 +1,256 @@
+{
+  "tokens": [
+    {
+      "chainName": "Ethereum",
+      "coinName": "ETH",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Ethereum",
+      "coinName": "USDT",
+      "contractAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Ethereum",
+      "coinName": "USDC",
+      "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "BNB Smart Chain",
+      "coinName": "BNB",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "BNB Smart Chain",
+      "coinName": "USDT",
+      "contractAddress": "0x55d398326f99059fF775485246999027B3197955",
+      "decimals": 18,
+      "isNative": false
+    },
+    {
+      "chainName": "BNB Smart Chain",
+      "coinName": "USDC",
+      "contractAddress": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      "decimals": 18,
+      "isNative": false
+    },
+    {
+      "chainName": "Arbitrum One",
+      "coinName": "ETH",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Arbitrum One",
+      "coinName": "USDT",
+      "contractAddress": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Arbitrum One",
+      "coinName": "USDC",
+      "contractAddress": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Optimism",
+      "coinName": "ETH",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Optimism",
+      "coinName": "USDT",
+      "contractAddress": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Optimism",
+      "coinName": "USDC",
+      "contractAddress": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Polygon",
+      "coinName": "MATIC",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Polygon",
+      "coinName": "USDT",
+      "contractAddress": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Polygon",
+      "coinName": "USDC",
+      "contractAddress": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Avalanche C-Chain",
+      "coinName": "AVAX",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Avalanche C-Chain",
+      "coinName": "USDT",
+      "contractAddress": "0xc7198437980c041c805a1edcba50c1ce5db95118",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Avalanche C-Chain",
+      "coinName": "USDC",
+      "contractAddress": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Base",
+      "coinName": "ETH",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Base",
+      "coinName": "USDT",
+      "contractAddress": "0xfde4c96c8593536e31f229ea8f37b2ada2699bb2",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Base",
+      "coinName": "USDC",
+      "contractAddress": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Linea",
+      "coinName": "ETH",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Linea",
+      "coinName": "USDT",
+      "contractAddress": "0xa219439258ca9da29e9cc4ce5596924745e12b93",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Linea",
+      "coinName": "USDC",
+      "contractAddress": "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "zkSync Era",
+      "coinName": "ETH",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "zkSync Era",
+      "coinName": "USDT",
+      "contractAddress": "0x493257fD37EDB34451f62EDf8D2a0C418852bA4C",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "zkSync Era",
+      "coinName": "USDC",
+      "contractAddress": "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "OPBNB",
+      "coinName": "tBNB",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "OPBNB",
+      "coinName": "USDT",
+      "contractAddress": "0x9e5AAC1Ba1a2e6aEd6b32689DFcF62A509Ca96f3",
+      "decimals": 18,
+      "isNative": false
+    },
+    {
+      "chainName": "OPBNB",
+      "coinName": "USDC",
+      "contractAddress": "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+      "decimals": 18,
+      "isNative": false
+    },
+    {
+      "chainName": "Solana Mainnet",
+      "coinName": "SOL",
+      "contractAddress": "So11111111111111111111111111111111111111112",
+      "decimals": 9,
+      "isNative": true
+    },
+    {
+      "chainName": "Solana Mainnet",
+      "coinName": "USDT",
+      "contractAddress": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Solana Mainnet",
+      "coinName": "USDC",
+      "contractAddress": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Ethereum Sepolia",
+      "coinName": "ETH",
+      "contractAddress": "0x0000000000000000000000000000000000000000",
+      "decimals": 18,
+      "isNative": true
+    },
+    {
+      "chainName": "Ethereum Sepolia",
+      "coinName": "USDT",
+      "contractAddress": "0x516de3a7a567d81737e3a46ec4ff9cfd1fcb0136",
+      "decimals": 6,
+      "isNative": false
+    },
+    {
+      "chainName": "Ethereum Sepolia",
+      "coinName": "USDC",
+      "contractAddress": "0x6c3ea9036406852006290770bEdFcAbA0e23A0e8",
+      "decimals": 6,
+      "isNative": false
+    }
+  ]
+} 

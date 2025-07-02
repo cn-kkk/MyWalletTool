@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+
+# 日志
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS文件
+Thumbs.db
+Desktop.ini
+
+# 本地配置
+.env
+.env.*
+
+# 其他
+wallets.txt 

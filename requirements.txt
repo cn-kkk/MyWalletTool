@@ -1,0 +1,8 @@
+eth-account>=0.9.0
+solana>=0.30.0
+mnemonic>=0.20
+hdwallet>=2.2.0
+base58>=2.0.0
+web3>=6.0.0
+requests>=2.25.0
+construct>=2.10.67 
