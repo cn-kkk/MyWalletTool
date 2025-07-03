@@ -11,6 +11,12 @@ from PyQt5.QtCore import Qt, QSize, QTimer, pyqtSignal, QThread, QMetaObject, Q_
 from PyQt5.QtGui import QFont, QColor, QPalette, QBrush
 from util.walletUtil import WalletUtil
 
+def resource_path(relative_path):
+    """获取资源文件的绝对路径，兼容 PyInstaller 打包和源码运行"""
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(getattr(sys, '_MEIPASS'), relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
 class WorkerThread(QThread):
     """工作线程类"""
     result_ready = pyqtSignal(str, str)  # 信号：(结果类型, 结果内容)
@@ -216,7 +222,7 @@ class HomeTab(QWidget):
         self.readme_view.setReadOnly(True)
         self.readme_view.setFont(QFont('Consolas', 12))
         try:
-            with open("README.md", "r", encoding="utf-8") as f:
+            with open(resource_path("README.md"), "r", encoding="utf-8") as f:
                 self.readme_view.setText(f.read())
         except Exception:
             self.readme_view.setText("README.md 加载失败")
@@ -290,7 +296,7 @@ class ConfigTab(QWidget):
     def load_chain_config(self):
         """加载链配置"""
         try:
-            with open("config/chain.json", "r", encoding="utf-8") as f:
+            with open(resource_path("config/chain.json"), "r", encoding="utf-8") as f:
                 data = json.load(f)
                 self.chain_edit.setPlainText(json.dumps(data, indent=2, ensure_ascii=False))
         except Exception as e:
@@ -299,7 +305,7 @@ class ConfigTab(QWidget):
     def load_contract_config(self):
         """加载合约配置"""
         try:
-            with open("config/contract.json", "r", encoding="utf-8") as f:
+            with open(resource_path("config/contract.json"), "r", encoding="utf-8") as f:
                 data = json.load(f)
                 self.token_edit.setPlainText(json.dumps(data, indent=2, ensure_ascii=False))
         except Exception as e:
@@ -318,7 +324,7 @@ class ConfigTab(QWidget):
             data = json.loads(content)
             
             # 保存到文件
-            with open("config/chain.json", "w", encoding="utf-8") as f:
+            with open(resource_path("config/chain.json"), "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
             
             # 恢复只读状态
@@ -346,7 +352,7 @@ class ConfigTab(QWidget):
             data = json.loads(content)
             
             # 保存到文件
-            with open("config/contract.json", "w", encoding="utf-8") as f:
+            with open(resource_path("config/contract.json"), "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
             
             # 恢复只读状态
@@ -686,7 +692,7 @@ class TransferTab(QWidget):
     def load_chain_config(self):
         """加载链配置文件"""
         try:
-            with open("config/chain.json", "r", encoding="utf-8") as f:
+            with open(resource_path("config/chain.json"), "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
             print(f"加载chain.json失败: {e}")
@@ -695,7 +701,7 @@ class TransferTab(QWidget):
     def load_contract_config(self):
         """加载合约配置文件"""
         try:
-            with open("config/contract.json", "r", encoding="utf-8") as f:
+            with open(resource_path("config/contract.json"), "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
             print(f"加载contract.json失败: {e}")

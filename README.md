@@ -19,4 +19,4 @@ pip install -r requirements.txt
 python wallet_gui.py
 ```
 
-## 链上打新、mint等待后续开发
+PS：exe 同目录下会生成 logs 文件夹，链上打新、mint 等功能等待后续开发。
