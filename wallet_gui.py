@@ -31,7 +31,6 @@ class StyledSidebar(QListWidget):
         self.setStyleSheet('''
             QListView, QListWidget {
                 outline: none;
-                box-shadow: none;
             }
             QListWidget {
                 border: none;
@@ -46,22 +45,18 @@ class StyledSidebar(QListWidget):
                 font-size: 18px;
                 color: #333;
                 outline: none;
-                box-shadow: none;
             }
             QListWidget::item:selected {
                 background: #d0eaff;
                 border: 1.5px solid #3399ff;
                 color: #005599;
                 outline: none;
-                box-shadow: none;
             }
             QListWidget::item:focus {
                 outline: none;
-                box-shadow: none;
             }
             QListWidget::item:active {
                 outline: none;
-                box-shadow: none;
             }
             QListWidget::item:hover {
                 background: #e6f2ff;
