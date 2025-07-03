@@ -1,18 +1,22 @@
 # MyWalletTool - Web3钱包工具
 
-这是一个自用的Web3钱包工具项目，提供生成EVM和Solana钱包地址的功能。
-
 ## 功能特性
 
 - 生成随机EVM地址
 - 生成随机Solana地址
-- 批量创建新钱包（包含助记词、EVM地址、Solana地址）
-- 自动保存钱包信息到文件
+- 批量创建新钱包（包含助记词）
 - 链上转账功能（支持EVM链和Solana链）
-- 配置验证和地址格式验证
+- 图形化界面（GUI）支持
+- config的okx文本包含主流链的usdt和usdc合约
 
-## 安装依赖
+## 小白直接下载release运行
+
+## 程序员clone后运行以下
 
 ```bash
+cd /MyWalletTool
 pip install -r requirements.txt
+python wallet_gui.py
 ```
+
+## 链上打新、mint等待后续开发

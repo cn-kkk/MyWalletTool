@@ -5,4 +5,5 @@ hdwallet>=2.2.0
 base58>=2.0.0
 web3>=6.0.0
 requests>=2.25.0
-construct>=2.10.67 
+construct>=2.10.67
+PyQt5>=5.15.0 

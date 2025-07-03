@@ -23,16 +23,22 @@ import base64
 import logging
 from datetime import datetime
 
-# 日志格式设置
+# 日志格式设置 - 只输出到控制台，不生成文件
 logger = logging.getLogger("MyWalletTool")
 logger.setLevel(logging.INFO)
-if not logger.handlers:
-    handler = logging.FileHandler("logs/wallet_tool.log", encoding="utf-8")
-    formatter = logging.Formatter('[%(levelname)s]%(asctime)s——%(message)s', datefmt='%Y-%m-%d %H:%M:%S:%f')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
 
-# 控制台不再打印，全部写日志
+# 清除已有的处理器
+for handler in logger.handlers[:]:
+    logger.removeHandler(handler)
+
+# 添加控制台处理器
+console_handler = logging.StreamHandler()
+formatter = logging.Formatter('[%(levelname)s] %(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+# 防止日志传播到根logger
+logger.propagate = False
 
 def log_info(msg):
     logger.info(msg)
@@ -251,53 +257,28 @@ class WalletUtil:
             except:
                 return False
     
-    def transfer_token(self, 
-                      private_key: str, 
-                      to_address: str, 
-                      chain_name: str, 
-                      coin_name: str, 
-                      amount: str) -> Dict:
-        """
-        转账代币
-        
-        Args:
-            private_key: 发送方私钥
-            to_address: 接收方地址
-            chain_name: 链名称
-            coin_name: 代币名称
-            amount: 转账数量（字符串格式）
-            
-        Returns:
-            Dict: 转账结果
-        """
-        params = {
-            'private_key': '***',
-            'to_address': to_address,
-            'chain_name': chain_name,
-            'coin_name': coin_name,
-            'amount': amount
-        }
-        log_info(f"开始{chain_name}转账——请求参数:{json.dumps(params, ensure_ascii=False)}")
+    def transfer_token(self, private_key: str, to_address: str, chain_name: str, coin_name: str, amount: str) -> Dict:
         try:
-            # 验证链和代币配置
-            chain_info, token_info = self._validate_chain_and_token(chain_name, coin_name)
-            
-            # 验证地址格式
-            if not self._validate_address(to_address, chain_name):
-                raise ValueError(f"接收地址格式无效: {to_address}")
-            
-            # 根据链类型执行转账
+            log_info(f"开始{chain_name}转账——请求参数:{{'private_key': '***', 'to_address': '{to_address}', 'chain_name': '{chain_name}', 'coin_name': '{coin_name}', 'amount': '{amount}'}}")
             if chain_name == "Solana Mainnet":
+                token_info = self._get_token_info(chain_name, coin_name)
+                log_info(f"开始solana钱包转账——请求参数:{{'private_key': '***', 'to_address': '{to_address}', 'token_info': {token_info}, 'amount': '{amount}'}}")
                 result = self._transfer_solana(private_key, to_address, token_info, amount)
+                log_info(f"完成solana钱包转账——响应结果:{json.dumps(result, ensure_ascii=False)}")
+                return result
             else:
+                chain_info, token_info = self._validate_chain_and_token(chain_name, coin_name)
+                log_info(f"开始evm钱包转账——请求参数:{{'private_key': '***', 'to_address': '{to_address}', 'chain_info': {chain_info}, 'token_info': {token_info}, 'amount': '{amount}', 'coin_name': '{coin_name}'}}")
                 result = self._transfer_evm(private_key, to_address, chain_info, token_info, amount, coin_name)
-            log_info(f"完成{chain_name}转账——响应结果:{json.dumps(result, ensure_ascii=False)}")
-            return result
-                
+                # 处理tx_hash为HexBytes的情况
+                if result.get('tx_hash') is not None:
+                    result['tx_hash'] = str(result['tx_hash'])
+                log_info(f"完成evm钱包转账——响应结果:{json.dumps(result, ensure_ascii=False)}")
+                return result
         except Exception as e:
-            error_json = {'success': False, 'error': str(e), 'tx_hash': None}
-            log_error(f"{chain_name}转账异常——{json.dumps(error_json, ensure_ascii=False)}")
-            return error_json
+            error_result = {"success": False, "error": f"{chain_name}转账失败: {e}", "tx_hash": None}
+            log_error(f"{chain_name}钱包转账异常——{json.dumps(error_result, ensure_ascii=False)}")
+            return error_result
     
     def _transfer_evm(self, 
                      private_key: str, 
@@ -486,7 +467,7 @@ class WalletUtil:
                     tx_sig = resp.value
                     result = {
                         "success": True,
-                        "tx_hash": tx_sig,
+                        "tx_hash": str(tx_sig),
                         "from_address": str(from_pub),
                         "to_address": str(to_pub),
                         "amount": amount,
@@ -534,7 +515,7 @@ class WalletUtil:
                     tx_sig = resp.value
                     result = {
                         "success": True,
-                        "tx_hash": tx_sig,
+                        "tx_hash": str(tx_sig),
                         "from_address": str(from_pub),
                         "to_address": str(to_pub),
                         "amount": amount,
