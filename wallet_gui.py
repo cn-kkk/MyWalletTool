@@ -1,7 +1,6 @@
 import sys
 import json
 import os
-import threading
 import time
 from datetime import datetime
 from PyQt5.QtWidgets import (
@@ -13,9 +12,38 @@ from util.walletUtil import WalletUtil
 
 def resource_path(relative_path):
     """获取资源文件的绝对路径，兼容 PyInstaller 打包和源码运行"""
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(getattr(sys, '_MEIPASS'), relative_path)
-    return os.path.join(os.path.abspath("."), relative_path)
+    try:
+        # 如果是PyInstaller打包后的环境
+        if hasattr(sys, '_MEIPASS'):
+            # 从临时解压目录读取
+            meipass_path = os.path.join(getattr(sys, '_MEIPASS'), relative_path)
+            if os.path.exists(meipass_path):
+                return meipass_path
+        
+        # 尝试从当前工作目录读取
+        current_dir_path = os.path.join(os.getcwd(), relative_path)
+        if os.path.exists(current_dir_path):
+            return current_dir_path
+        
+        # 尝试从exe所在目录读取
+        if hasattr(sys, 'executable'):
+            exe_dir = os.path.dirname(sys.executable)
+            exe_dir_path = os.path.join(exe_dir, relative_path)
+            if os.path.exists(exe_dir_path):
+                return exe_dir_path
+        
+        # 尝试从源码目录读取
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        script_dir_path = os.path.join(script_dir, relative_path)
+        if os.path.exists(script_dir_path):
+            return script_dir_path
+        
+        # 如果都找不到，返回当前工作目录的路径
+        return current_dir_path
+        
+    except Exception as e:
+        print(f"resource_path error for {relative_path}: {e}")
+        return relative_path
 
 class WorkerThread(QThread):
     """工作线程类"""
@@ -45,13 +73,11 @@ class WorkerThread(QThread):
                 self.log_ready.emit(f"Solana地址生成成功: {address}")
                 
             elif self.task_type == "generate_wallet":
-                wallets = self.wallet_util.generate_wallet_info(1)
-                if wallets:
-                    wallet = wallets[0]
-                    result = json.dumps(wallet, indent=2, ensure_ascii=False)
-                    self.result_ready.emit("wallet", result)
-                    self.log_ready.emit(f"钱包生成成功: {wallet['evm_address']}")
-                    
+                wallet = self.wallet_util.generate_wallet_info()
+                result = json.dumps(wallet, indent=2, ensure_ascii=False)
+                self.result_ready.emit("wallet", result)
+                self.log_ready.emit(f"钱包生成成功: {wallet['evm_address']}")
+                
             elif self.task_type == "evm_transfer":
                 private_key, to_address, chain_name, coin_name, amount = self.args
                 try:
@@ -222,10 +248,15 @@ class HomeTab(QWidget):
         self.readme_view.setReadOnly(True)
         self.readme_view.setFont(QFont('Consolas', 12))
         try:
-            with open(resource_path("README.md"), "r", encoding="utf-8") as f:
-                self.readme_view.setText(f.read())
-        except Exception:
-            self.readme_view.setText("README.md 加载失败")
+            readme_path = resource_path("README.md")
+            print(f"尝试加载README文件: {readme_path}")
+            if os.path.exists(readme_path):
+                with open(readme_path, "r", encoding="utf-8") as f:
+                    self.readme_view.setText(f.read())
+            else:
+                self.readme_view.setText(f"README.md 文件不存在: {readme_path}")
+        except Exception as e:
+            self.readme_view.setText(f"README.md 加载失败: {str(e)}")
         layout.addWidget(self.readme_view)
         self.setLayout(layout)
 
@@ -296,18 +327,28 @@ class ConfigTab(QWidget):
     def load_chain_config(self):
         """加载链配置"""
         try:
-            with open(resource_path("config/chain.json"), "r", encoding="utf-8") as f:
-                data = json.load(f)
-                self.chain_edit.setPlainText(json.dumps(data, indent=2, ensure_ascii=False))
+            chain_path = resource_path("config/chain.json")
+            print(f"尝试加载chain.json文件: {chain_path}")
+            if os.path.exists(chain_path):
+                with open(chain_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self.chain_edit.setPlainText(json.dumps(data, indent=2, ensure_ascii=False))
+            else:
+                self.chain_edit.setPlainText(f"chain.json文件不存在: {chain_path}")
         except Exception as e:
             self.chain_edit.setPlainText(f"加载chain.json失败: {e}")
     
     def load_contract_config(self):
         """加载合约配置"""
         try:
-            with open(resource_path("config/contract.json"), "r", encoding="utf-8") as f:
-                data = json.load(f)
-                self.token_edit.setPlainText(json.dumps(data, indent=2, ensure_ascii=False))
+            contract_path = resource_path("config/contract.json")
+            print(f"尝试加载contract.json文件: {contract_path}")
+            if os.path.exists(contract_path):
+                with open(contract_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self.token_edit.setPlainText(json.dumps(data, indent=2, ensure_ascii=False))
+            else:
+                self.token_edit.setPlainText(f"contract.json文件不存在: {contract_path}")
         except Exception as e:
             self.token_edit.setPlainText(f"加载contract.json失败: {e}")
     

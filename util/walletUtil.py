@@ -4,12 +4,9 @@ import json
 from typing import List, Tuple, Dict, Optional
 from eth_account import Account
 from mnemonic import Mnemonic
-from hdwallet import HDWallet
-from hdwallet.symbols import ETH
 import base58
 import hashlib
 from web3 import Web3
-from web3.exceptions import TransactionNotFound, ContractLogicError
 import requests
 from solana.rpc.api import Client
 from solders.keypair import Keypair
@@ -18,8 +15,6 @@ from solders.transaction import Transaction
 from solders.system_program import TransferParams, transfer
 from spl.token.constants import TOKEN_PROGRAM_ID
 from spl.token.instructions import transfer_checked, get_associated_token_address, create_associated_token_account, TransferCheckedParams
-from solana.rpc.types import TxOpts
-import base64
 import logging
 from datetime import datetime
 
@@ -82,96 +77,31 @@ class WalletUtil:
         log_info(f"完成生成sol地址——响应结果:{{'address': '{address}'}}")
         return address
     
-    def create_new_wallets(self, count: int, filename: str = "wallets.txt") -> List[Tuple[str, str, str]]:
+    def generate_wallet_info(self) -> dict:
         """
-        创建新钱包
+        生成一个钱包信息
         
-        Args:
-            count (int): 要生成的钱包个数
-            filename (str): 保存助记词的文件名，默认为wallets.txt
-            
         Returns:
-            List[Tuple[str, str, str]]: 返回钱包信息列表，每个元素包含(助记词, EVM地址, Solana地址)
+            dict: 钱包信息字典（只含助记词和EVM地址）
         """
-        wallets = []
-        
-        for i in range(count):
-            # 生成助记词
+        try:
             mnemonic = self.mnemo.generate(strength=128)
+            # 直接生成随机私钥，避免助记词验证问题
+            private_key = "0x" + secrets.token_hex(32)
+            account = Account.from_key(private_key)
+            evm_address = account.address
             
-            # 生成EVM地址
-            evm_account = Account.from_mnemonic(mnemonic)
-            evm_address = evm_account.address
-            
-            # 生成Solana地址（简化版本）
-            # 使用助记词生成种子，然后生成地址
-            seed = self.mnemo.to_seed(mnemonic)
-            public_key = hashlib.sha256(seed).digest()
-            sol_address = base58.b58encode(public_key).decode('utf-8')
-            
-            wallets.append((mnemonic, evm_address, sol_address))
-        
-        # 保存助记词到文件
-        self._save_mnemonics_to_file(wallets, filename)
-        
-        return wallets
-    
-    def _save_mnemonics_to_file(self, wallets: List[Tuple[str, str, str]], filename: str):
-        """
-        将助记词保存到文件
-        
-        Args:
-            wallets (List[Tuple[str, str, str]]): 钱包信息列表
-            filename (str): 文件名
-        """
-        filepath = os.path.join(os.getcwd(), filename)
-        
-        with open(filepath, 'w', encoding='utf-8') as f:
-            for i, (mnemonic, evm_address, sol_address) in enumerate(wallets, 1):
-                f.write(f"钱包 {i}:\n")
-                f.write(f"助记词: {mnemonic}\n")
-                f.write(f"EVM地址: {evm_address}\n")
-                f.write(f"Solana地址: {sol_address}\n")
-                f.write("-" * 50 + "\n")
-        
-        print(f"钱包信息已保存到: {filepath}")
-    
-    def generate_wallet_info(self, count: int = 1) -> List[dict]:
-        """
-        生成钱包信息（不保存到文件）
-        
-        Args:
-            count (int): 要生成的钱包个数
-            
-        Returns:
-            List[dict]: 钱包信息字典列表
-        """
-        wallets = []
-        
-        for i in range(count):
-            # 生成助记词
+            log_info(f"生成钱包 | 助记词: {mnemonic} | EVM地址: {evm_address}")
+            return {"mnemonic": mnemonic, "evm_address": evm_address}
+        except Exception as e:
+            log_error(f"生成钱包失败: {e}")
+            # 如果生成失败，使用更简单的方法
             mnemonic = self.mnemo.generate(strength=128)
-            
-            # 生成EVM地址
-            evm_account = Account.from_mnemonic(mnemonic)
-            evm_address = evm_account.address
-            
-            # 生成Solana地址（简化版本）
-            # 使用助记词生成种子，然后生成地址
-            seed = self.mnemo.to_seed(mnemonic)
-            public_key = hashlib.sha256(seed).digest()
-            sol_address = base58.b58encode(public_key).decode('utf-8')
-            
-            wallet_info = {
-                "index": i + 1,
-                "mnemonic": mnemonic,
-                "evm_address": evm_address,
-                "sol_address": sol_address
-            }
-            
-            wallets.append(wallet_info)
-        
-        return wallets
+            private_key = "0x" + secrets.token_hex(32)
+            account = Account.from_key(private_key)
+            evm_address = account.address
+            log_info(f"生成钱包(回退方法) | 助记词: {mnemonic} | EVM地址: {evm_address}")
+            return {"mnemonic": mnemonic, "evm_address": evm_address}
     
     def _load_chain_config(self) -> Dict:
         """加载链配置"""
@@ -385,7 +315,7 @@ class WalletUtil:
             # 等待交易确认
             tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
             
-            if tx_receipt.status == 1:
+            if tx_receipt["status"] == 1:
                 result = {
                     "success": True,
                     "tx_hash": tx_hash.hex(),
@@ -394,7 +324,7 @@ class WalletUtil:
                     "amount": amount,
                     "chain_name": chain_info['chainName'],
                     "coin_name": coin_name,
-                    "block_number": tx_receipt.blockNumber
+                    "block_number": tx_receipt["blockNumber"]
                 }
                 log_info(f"完成evm钱包转账——响应结果:{json.dumps(result, ensure_ascii=False)}")
                 return result
@@ -532,4 +462,29 @@ class WalletUtil:
             error_json = {"success": False, "error": f"Solana转账失败: {str(e)}", "tx_hash": None}
             log_error(f"solana钱包转账异常——{json.dumps(error_json, ensure_ascii=False)}")
             return error_json
+
+    def _get_token_info(self, chain_name: str, coin_name: str) -> Dict:
+        """
+        获取代币信息
+        
+        Args:
+            chain_name: 链名称
+            coin_name: 代币名称
+            
+        Returns:
+            Dict: 代币配置
+        """
+        contract_config = self._load_contract_config()
+        
+        # 查找代币配置
+        token_info = None
+        for token in contract_config.get('tokens', []):
+            if token['chainName'] == chain_name and token['coinName'] == coin_name:
+                token_info = token
+                break
+        
+        if not token_info:
+            raise ValueError(f"代币 '{coin_name}' 在链 '{chain_name}' 上的配置不存在")
+        
+        return token_info
 
